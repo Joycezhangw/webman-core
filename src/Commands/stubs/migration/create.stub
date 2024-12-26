@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Landao\WebmanCore\Migration\Migration;
+
+return new class extends Migration {
+
+    /**
+         * Run the migrations.
+         */
+        public function up(): void
+        {
+            $this->schema()->create('$TABLE$', function (Blueprint $table) {
+                $table->id();
+                $FIELDS$
+                $table->unsignedInteger('created_at')->default(0)->comment('创建时间');
+                $table->unsignedInteger('updated_at')->default(0)->comment('更新时间');
+                $table->unsignedInteger('deleted_at')->default(0)->comment('删除时间');
+            });
+            //表注释
+            $this->db->statement("ALTER TABLE `$TABLE$` comment ''");
+            //主键列自增id
+            //Db::statement("ALTER TABLE `$TABLE$` AUTO_INCREMENT=1001");
+        }
+
+        /**
+         * Reverse the migrations.
+         */
+        public function down(): void
+        {
+            $this->schema()->dropIfExists('$TABLE$');
+        }
+};

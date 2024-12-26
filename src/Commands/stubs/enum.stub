@@ -1,0 +1,21 @@
+<?php
+declare(strict_types=1);
+
+namespace $CLASS_NAMESPACE$;
+
+use Landao\WebmanCore\Annotation\Description;
+use Landao\WebmanCore\Enum\EnumExtend;
+
+
+/**
+ * 请说明具体哪块业务的 Enum
+ *
+ * @author joyecZhang <https://qilindao.github.io/docs/backend/laravel-lib/enum.html>
+ *
+ * Class UserStatusEnum
+ * @package $CLASS_NAMESPACE$
+ */
+enum UserStatusEnum
+{
+    use EnumExtend;
+}

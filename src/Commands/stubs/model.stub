@@ -1,0 +1,59 @@
+<?php
+declare(strict_types=1);
+
+namespace $CLASS_NAMESPACE$;
+
+use Landao\WebmanCore\Model\Traits\SerializeDate;
+use support\Model;
+
+/**
+ * 请说明具体哪块业务的 Eloquent ORM
+ *
+ * @author joyecZhang <https://qilindao.github.io/docs/backend/>
+ *
+ * Class $CLASS$Model
+ * @package $CLASS_NAMESPACE$
+ */
+class $CLASS$Model extends Model
+{
+    use SerializeDate;
+
+    /**
+     * 表名
+     * @var string
+     */
+    protected $table = '';
+
+    /**
+     * 主键字段
+     * @var string
+     */
+    protected $primaryKey = '';
+
+    /**
+     * 是否自动维护时间戳
+     * @var bool
+     */
+    public $timestamps = true;
+
+    /**
+     * 模型日期列的存储格式。
+     * @var string
+     */
+    protected $dateFormat = 'U';
+
+    /**
+     * 字段信息
+     * @var array
+     */
+    protected $fillable = [];
+
+    /**
+     * 属性转化
+     * @var array
+     */
+    protected $casts = [
+      'created_at' => 'datetime:Y-m-d H:i:s',
+      'updated_at' => 'datetime:Y-m-d H:i:s',
+    ];
+}

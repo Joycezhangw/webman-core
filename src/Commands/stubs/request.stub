@@ -1,0 +1,23 @@
+<?php
+
+namespace $CLASS_NAMESPACE$;
+
+use Landao\WebmanCore\Validation\Validate;
+
+/**
+ * 请说明具体哪块业务的 Request
+ *
+ * Class $CLASS$Request
+ * @package $CLASS_NAMESPACE$
+ */
+class $CLASS$Request extends Validate
+{
+
+    protected array $rules = [
+
+        ], $attributes = [
+
+        ];
+
+
+}

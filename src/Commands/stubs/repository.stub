@@ -1,0 +1,27 @@
+<?php
+declare(strict_types=1);
+
+namespace $CLASS_NAMESPACE$;
+
+use Landao\WebmanCore\Repository\BaseRepository;
+use $MODEL_CLASS_NAMESPACE$;
+
+/**
+ * 请说明具体哪块业务的 Repository 接口实现
+ *
+ * @author joyecZhang <https://qilindao.github.io/docs/backend/>
+ *
+ * Class $CLASS$Repo
+ * @package $CLASS_NAMESPACE$
+ */
+class $CLASS$Repo extends BaseRepository
+{
+
+    /**
+     * @return string
+     */
+    public function model()
+    {
+        return $CLASS$Model::class;
+    }
+}
