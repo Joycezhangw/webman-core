@@ -16,6 +16,8 @@
     "guzzlehttp/guzzle": "^7.9",
     "illuminate/http": "^11.36"
   },
+  "require-dev": {
+  },
   "autoload": {
     "psr-4": {
       "Landao\\WebmanCore\\": "src"
