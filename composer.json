@@ -1,11 +1,26 @@
 {
   "name": "landao/webman-core",
   "type": "library",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "description": "Webman plugin landao/webman-core",
+  "keywords": [
+    "webman",
+    "repository",
+    "eloquent",
+    "model",
+    "cache",
+    "enum",
+    "validation"
+  ],
+  "homepage": "https://qilindao.github.io/docs/",
+  "authors": [
+    {
+      "name": "joycezhangw",
+      "email": "zhangwei762@163.com"
+    }
+  ],
   "require": {
-    "php": ">=8.1",
     "illuminate/database": ">=11.35",
     "illuminate/pagination": ">=11.35",
     "illuminate/events": ">=1.35",
@@ -25,5 +40,6 @@
       "src/helpers.php"
     ]
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
