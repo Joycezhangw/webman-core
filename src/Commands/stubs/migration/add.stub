@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Schema\Blueprint;
-use Landao\WebmanCore\Migrations\Migration;
+use Landao\WebmanCore\Database\Migration;
 
 return new class extends Migration
 {
