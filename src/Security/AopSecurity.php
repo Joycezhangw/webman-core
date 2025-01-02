@@ -36,7 +36,6 @@ class AopSecurity
     public function hmac_md5($input)
     {
         $key = base64_decode($this->screctKey);
-
         return hash_hmac('md5', $input, $key, true);
     }
 
@@ -53,7 +52,6 @@ class AopSecurity
         $str = $this->addPKCS7Padding($str);
 
         //设置全0的IV
-
         $iv = $this->scretIv;//str_repeat("\0", 16);
         $encrypt_str = openssl_encrypt($str, 'aes-128-cbc', $screct_key, OPENSSL_NO_PADDING, $iv);
         return base64_encode($encrypt_str);

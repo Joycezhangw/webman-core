@@ -49,4 +49,26 @@ class AopPassword
     {
         return $this->encrypt($password, $salt) == $dbPassword ? true : false;
     }
+
+    /**
+     * 密码哈希
+     * @param string $password
+     * @param string $algo
+     * @return false|string|null
+     */
+    public static function passwordHash(string $password, string $algo = PASSWORD_DEFAULT)
+    {
+        return password_hash($password, $algo);
+    }
+
+    /**
+     * 验证密码哈希
+     * @param string $password
+     * @param string $hash
+     * @return bool
+     */
+    public static function passwordVerify(string $password, string $hash): bool
+    {
+        return password_verify($password, $hash);
+    }
 }
