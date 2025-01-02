@@ -1,7 +1,7 @@
 {
   "name": "landao/webman-core",
   "type": "library",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "license": "MIT",
   "description": "Webman plugin landao/webman-core",
   "keywords": [
@@ -41,5 +41,6 @@
       "src/helpers.php"
     ]
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
