@@ -2,16 +2,12 @@
 
 namespace Landao\WebmanCore\Tenant\Traits;
 
-use Landao\WebmanCore\Tenant\Model\Tenant;
+use Landao\WebmanCore\Exceptions\TenancyException;
 use Landao\WebmanCore\Tenant\Model\TenantScope;
 
 trait BelongsToTenant
 {
 
-    /**
-     * 租户ID字段名
-     */
-    public static string $tenantIdColumn = 'tenant_id';
 
     /**
      * 获取租户ID字段名
@@ -26,7 +22,12 @@ trait BelongsToTenant
      */
     public function tenant()
     {
-        return $this->belongsTo(Tenant::class, static::getTenantIdColumn());
+        $tenantModel = config('plugin.landao.webman-core.app.tenant.model');
+        // 检查 tenantModel 是否有效
+        if (!$tenantModel) {
+            throw new TenancyException('租户模型未定义，请检查配置。');
+        }
+        return $this->belongsTo($tenantModel, static::getTenantIdColumn());
     }
 
     /**

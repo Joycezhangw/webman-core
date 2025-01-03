@@ -2,7 +2,6 @@
 
 namespace Landao\WebmanCore\Tenant;
 
-use Landao\WebmanCore\Tenant\Model\Tenant;
 
 /**
  * 租户管理类
@@ -10,7 +9,7 @@ use Landao\WebmanCore\Tenant\Model\Tenant;
 class Tenancy
 {
     private static $instance = null;
-    private ?Tenant $currentTenant = null;
+    private $currentTenant = null;
 
     private function __construct()
     {
@@ -37,7 +36,7 @@ class Tenancy
      * @param Tenant|null $tenant
      * @return $this
      */
-    public function setTenant(?Tenant $tenant): self
+    public function setTenant($tenant): self
     {
         $this->currentTenant = $tenant;
 

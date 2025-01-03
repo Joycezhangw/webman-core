@@ -31,9 +31,8 @@ return [
         'file' => true,
     ],
     'tenant' => [
-        'table' => 'tenants',
         'primary_key' => 'tenant_id',
-        'fillable' => []
+        'model' => \app\model\TenantModel::class
     ],
     "annotation" => [
         //路由注解
