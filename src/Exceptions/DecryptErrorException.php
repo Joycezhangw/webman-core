@@ -2,12 +2,12 @@
 
 namespace Landao\WebmanCore\Exceptions;
 
-use Exception;
-
 /**
  * 解密异常
  */
-class DecryptErrorException extends Exception
+class DecryptErrorException extends BaseException
 {
+    public int $statusCode = 500;
 
+    public string $errorMessage = '解密失败';
 }
