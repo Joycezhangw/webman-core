@@ -2,7 +2,7 @@
 
 namespace Landao\WebmanCore;
 
-use Landao\WebmanCore\Logs\ListenOrm;
+use Landao\WebmanCore\Log\ListenOrm;
 use Webman\Bootstrap;
 use Workerman\Worker;
 

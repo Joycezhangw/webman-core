@@ -1,7 +1,7 @@
 {
   "name": "landao/webman-core",
   "type": "library",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "license": "MIT",
   "description": "Webman plugin landao/webman-core",
   "keywords": [
@@ -22,7 +22,8 @@
   ],
   "require": {
     "php": "^8.2",
-     "ext-bcmath": "*",
+    "ext-bcmath": "*",
+    "ext-openssl": "*",
     "illuminate/database": ">=11.36",
     "illuminate/pagination": ">=11.36",
     "illuminate/events": ">=1.36",
@@ -31,7 +32,8 @@
     "laravel/serializable-closure": ">=2.0",
     "symfony/finder": ">=7.2",
     "guzzlehttp/guzzle": ">=7.9",
-    "illuminate/http": ">=11.36"
+    "illuminate/http": ">=11.36",
+    "tinywan/jwt": ">=1.10"
   },
   "require-dev": {},
   "autoload": {
