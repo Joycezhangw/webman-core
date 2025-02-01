@@ -5,7 +5,7 @@ namespace Landao\WebmanCore\Model\Casts;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use LanDao\WebmanCore\Exceptions\DecryptErrorException;
-use LanDao\WebmanCore\Security\AopSecurity;
+use LanDao\WebmanCore\Security\AesSecurity;
 
 /**
  * 对需要加密的字段进行加解密处理
@@ -18,19 +18,24 @@ class EncryptTableDb implements CastsAttributes
 {
     /**
      * 将不为空的值进行加密
-     * @param Model $model
+     * @param $model
      * @param string $key
-     * @param mixed $value
+     * @param $value
      * @param array $attributes
      * @return mixed|string|null
+     * @throws \Exception
      */
     public function set($model, string $key, $value, array $attributes)
     {
-        //值为空不进行加密
-        if (!is_null($value) && $value !== '') {
-            return (new AopSecurity())->withScrectKey()->encrypt($value);
+        try {
+            //值为空不进行加密
+            if (!is_null($value) && $value !== '') {
+                return (new AesSecurity())->withSecretKey()->encrypt($value);
+            }
+            return $value;
+        } catch (DecryptErrorException $exception) {
+            throw new \Exception($exception->getMessage());
         }
-        return $value;
     }
 
     /**
@@ -46,7 +51,7 @@ class EncryptTableDb implements CastsAttributes
     {
         try {
             if (!is_null($value) && $value !== '') {
-                return (new AopSecurity())->withScrectKey()->decrypt($value);
+                return (new AesSecurity())->withSecretKey()->decrypt($value);
             }
             return $value;
         } catch (DecryptErrorException $exception) {

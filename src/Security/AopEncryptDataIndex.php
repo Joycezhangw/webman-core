@@ -2,6 +2,8 @@
 
 namespace Landao\WebmanCore\Security;
 
+use Landao\WebmanCore\Exceptions\DecryptErrorException;
+
 /**
  * 对加密字段进行拆分加密搜索
  * Class AopEncryptDataIndex
@@ -11,7 +13,7 @@ namespace Landao\WebmanCore\Security;
 class AopEncryptDataIndex
 {
     private $SEPARATOR_CHAR_MAP;
-    private $BASE64_ARRAY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+    private string $BASE64_ARRAY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
     private const PHONE_SEPARATOR_CHAR = '$';//手机号
     private const ID_CARD_SEPARATOR_CHAR = '#';//身份号
@@ -26,7 +28,10 @@ class AopEncryptDataIndex
         $this->SEPARATOR_CHAR_MAP['phone'] = self::PHONE_SEPARATOR_CHAR;
         $this->SEPARATOR_CHAR_MAP['idCard'] = self::ID_CARD_SEPARATOR_CHAR;
         //数据加密类
-        $this->aopSecurity = (new AopSecurity())->withScrectKey(config('plugin.landao.webman-core.app.security.security_key'));
+        try {
+            $this->aopSecurity = (new AesSecurity())->withSecretKey();
+        } catch (DecryptErrorException $e) {
+        }
     }
 
     /**
