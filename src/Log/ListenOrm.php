@@ -1,6 +1,6 @@
 <?php
 
-namespace Landao\WebmanCore\Logs;
+namespace Landao\WebmanCore\Log;
 
 use support\Db;
 use support\Log;
@@ -9,7 +9,7 @@ class ListenOrm
 {
     public static function start(): void
     {
-        $config = config('plugin.landao.webman-log.app.listenORM', [
+        $config = config('plugin.landao.webman-core.app.listenORM', [
             'enable' => true,
             'console' => false,
             'file' => true,
