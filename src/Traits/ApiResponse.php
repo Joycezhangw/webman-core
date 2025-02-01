@@ -1,193 +1,284 @@
 <?php
+declare(strict_types=1);
 
 namespace Landao\WebmanCore\Traits;
 
+use Landao\WebmanCore\Helpers\CamelHelper;
 use support\Response;
 use Symfony\Component\HttpFoundation\Response as FoundationResponse;
 
 trait ApiResponse
 {
     /**
-     * 状态
+     * HTTP状态
      * @var int
      */
-    protected $statusCode = FoundationResponse::HTTP_OK;
+    protected int $httpStatusCode = FoundationResponse::HTTP_OK;
 
     /**
-     * 获取状态
+     * 业务状态码
+     * @var int|null
+     */
+    protected ?int $businessCode = null;
+
+    /**
+     * 是否将键从蛇形命名转换为驼峰命名
+     * @var bool
+     */
+    protected bool $convertToCamelCase = true;
+
+    /**
+     * 默认响应头
+     * @var array
+     */
+    protected array $defaultHeaders = ['Content-Type' => 'application/json;charset=UTF-8'];
+
+    /**
+     * 获取HTTP状态码
      * @return int
      */
-    public function getStatusCode()
+    public function getHttpStatusCode(): int
     {
-        return $this->statusCode;
+        return $this->httpStatusCode;
     }
 
     /**
-     * 设置状态
-     * @param int $statusCode
+     * 设置HTTP状态码
+     * @param int $httpStatusCode
      * @return $this
      */
-    public function setStatusCode(int $statusCode)
+    public function setHttpStatusCode(int $httpStatusCode): self
     {
-        $this->statusCode = $statusCode;
+        if ($this->isValidHttpStatusCode($httpStatusCode)) {
+            $this->httpStatusCode = $httpStatusCode;
+        } else {
+            throw new \InvalidArgumentException("Invalid HTTP status code: $httpStatusCode");
+        }
         return $this;
     }
 
     /**
-     * @param $data
-     * @param $header
-     * @return Response
+     * 获取业务状态码
+     * @return ?int
      */
-    public function respond($data, $header = [])
+    public function getBusinessCode(): ?int
     {
-        $header['Content-Type'] = 'application/json';
-        return new Response($this->getStatusCode(), $header, json_encode($data));;
+        return $this->businessCode;
     }
 
-    public function status($status, array $data, $code = null)
+    /**
+     * 设置业务状态码
+     * @param ?int $businessCode
+     * @return $this
+     */
+    public function setBusinessCode(?int $businessCode): self
     {
-        if ($code) {
-            $this->setStatusCode($code);
+        $this->businessCode = $businessCode;
+        return $this;
+    }
+
+    /**
+     * 设置是否将键从蛇形命名转换为驼峰命名
+     * @param bool $convert
+     * @return $this
+     */
+    public function setConvertToCamelCase(bool $convert): self
+    {
+        $this->convertToCamelCase = $convert;
+        return $this;
+    }
+
+    /**
+     * @param mixed $data
+     * @param array $header
+     * @return Response
+     */
+    public function respond(mixed $data, array $header = []): Response
+    {
+        if ($this->convertToCamelCase) {
+            $data = CamelHelper::recursiveConvertNameCaseToCamel($data);
         }
-        $status = [
+        $headers = array_merge($this->defaultHeaders, $header);
+        return new Response($this->getHttpStatusCode(), $headers, json_encode($data));
+    }
+
+    /**
+     * @param string $status
+     * @param array $data
+     * @param ?int $httpStatusCode
+     * @param ?int $businessCode
+     * @return Response
+     */
+    public function status(string $status, array $data, ?int $httpStatusCode = null, ?int $businessCode = null): Response
+    {
+        // 验证并设置HTTP状态码
+        if (!is_null($httpStatusCode)) {
+            try {
+                $this->setHttpStatusCode($httpStatusCode);
+            } catch (\Exception $e) {
+                error_log("Failed to set HTTP status code: " . $this->sanitizeLogMessage($e->getMessage()));
+                $this->setHttpStatusCode(FoundationResponse::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        // 设置业务状态码
+        if (!is_null($businessCode)) {
+            $this->setBusinessCode($businessCode);
+        }
+
+        // 构建状态信息
+        $statusInfo = [
             'status' => $status,
-            'code' => $this->statusCode
+            'code' => $this->getBusinessCode() ?? $this->getHttpStatusCode()
         ];
-        if (isset($data['message']) && trim($data['message']) == '') {
+
+        // 处理 message 键为空字符串的情况
+        if (isset($data['message']) && is_string($data['message']) && trim($data['message']) === '') {
             unset($data['message']);
         }
-        $data = array_merge($status, $data);
-        return $this->respond($data);
+
+        // 合并数据并返回响应
+        $responseData = array_merge($statusInfo, $data);
+        return $this->respond($responseData);
     }
 
     /**
      * 提示
-     * @param $message
-     * @param $status
+     * @param string $message
+     * @param string $status
+     * @param ?int $businessCode
      * @return Response
      */
-    public function message($message, $status = 'error')
+    public function message(string $message, string $status = 'error', ?int $businessCode = null): Response
     {
-        return $this->status($status, ['message' => $message]);
+        return $this->status($status, ['message' => $message], null, $businessCode);
     }
 
     /**
      * 500 错误
-     * @param $message
+     * @param string $message
+     * @param ?int $businessCode
      * @return Response
      */
-    public function internalError($message = 'Internal Server Error!')
+    public function internalError(string $message = 'Internal Server Error!', ?int $businessCode = null): Response
     {
-        return $this->failed($message, FoundationResponse::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->failed($message, FoundationResponse::HTTP_INTERNAL_SERVER_ERROR, $businessCode);
     }
 
     /**
      * 请求成功，服务器创建了新资源
-     * @param $message
+     * @param string $message
+     * @param ?int $businessCode
      * @return Response
      */
-    public function created($message = 'created')
+    public function created(string $message = 'created', ?int $businessCode = null): Response
     {
-        return $this->setStatusCode(FoundationResponse::HTTP_CREATED)->message($message);
+        return $this->setHttpStatusCode(FoundationResponse::HTTP_CREATED)->message($message, 'success', $businessCode);
     }
 
     /**
      * 请求方法不存在
-     * @param $message
+     * @param string $message
+     * @param ?int $businessCode
      * @return Response
      */
-    public function methodNotAllow($message = 'Method Not Allowed!')
+    public function methodNotAllow(string $message = 'Method Not Allowed!', ?int $businessCode = null): Response
     {
-        return $this->setStatusCode(FoundationResponse::HTTP_METHOD_NOT_ALLOWED)->message($message);
+        return $this->failed($message, FoundationResponse::HTTP_METHOD_NOT_ALLOWED, $businessCode);
     }
 
     /**
      * 请求错误响应
-     * @param $message
-     * @param $code
-     * @param $status
+     * @param string $message
+     * @param ?int $businessCode
+     * @param ?int $httpStatusCode
      * @return Response
      */
-    public function failed($message, $code = FoundationResponse::HTTP_BAD_REQUEST, $status = 'error')
+    public function failed(string $message, ?int $businessCode = 0, ?int $httpStatusCode = FoundationResponse::HTTP_BAD_REQUEST): Response
     {
-        return $this->setStatusCode($code)->message($message, $status);
+        return $this->status('error', ['message' => $message], $httpStatusCode, $businessCode);
     }
 
     /**
      * 身份验证失败响应
-     * @param $message
+     * @param string $message
+     * @param ?int $businessCode
      * @return Response
      */
-    public function unAuthorized($message = 'Unauthorized.')
+    public function unAuthorized(string $message = 'Unauthorized.', ?int $businessCode = null): Response
     {
-        return $this->setStatusCode(FoundationResponse::HTTP_UNAUTHORIZED)->message($message);
+        return $this->failed($message, $businessCode, FoundationResponse::HTTP_UNAUTHORIZED);
     }
 
     /**
      * 服务器未知错误响应
-     * @param $message
+     * @param string $message
+     * @param ?int $businessCode
      * @return Response
      */
-    public function serviceUnavailable($message = 'Service Unavailable!')
+    public function serviceUnavailable(string $message = 'Service Unavailable!', ?int $businessCode = null): Response
     {
-        return $this->setStatusCode(FoundationResponse::HTTP_SERVICE_UNAVAILABLE)->message($message);
+        return $this->failed($message, $businessCode, FoundationResponse::HTTP_SERVICE_UNAVAILABLE);
     }
 
     /**
      * 权限不足响应
-     * @param $message
+     * @param string $message
+     * @param ?int $businessCode
      * @return Response
      */
-    public function forbidden($message = 'Forbidden.')
+    public function forbidden(string $message = 'Forbidden.', ?int $businessCode = null): Response
     {
-        return $this->setStatusCode(FoundationResponse::HTTP_FORBIDDEN)->message($message);
+        return $this->failed($message, $businessCode, FoundationResponse::HTTP_FORBIDDEN);
     }
 
     /**
      * 表单验证错误响应
-     * @param $message
+     * @param string $message
+     * @param ?int $businessCode
      * @return Response
      */
-    public function badRequest($message = 'Bad Request!')
+    public function badRequest(string $message = 'Bad Request!', ?int $businessCode = null): Response
     {
-        return $this->setStatusCode(FoundationResponse::HTTP_BAD_REQUEST)->message($message);
+        return $this->failed($message, $businessCode, FoundationResponse::HTTP_BAD_REQUEST);
     }
 
     /**
      * 成功响应
-     * @param $data
-     * @param $message
-     * @param $status
+     * @param array $data
+     * @param string $message
+     * @param string $status
+     * @param ?int $businessCode
      * @return Response
      */
-    public function success($data = [], $message = '', $status = 'success')
+    public function success(array $data = [], string $message = '', string $status = 'success', ?int $businessCode = null): Response
     {
-        return $this->status($status, compact('data', 'message'));
+        return $this->status($status, compact('data', 'message'), null, $businessCode);
     }
 
     /**
      * 成功响应带消息
-     * @param $message
+     * @param string $message
+     * @param ?int $businessCode
      * @return Response
      */
-    public function successRequest($message = '')
+    public function successRequest(string $message = '', ?int $businessCode = null): Response
     {
-        return $this->status('success', compact('message'));
+        return $this->success([], $message, 'success', $businessCode);
     }
-
 
     /**
      * 请求成功，其他业务状态码响应
-     * @param $message
-     * @param $code
-     * @param $data
+     * @param string $message
+     * @param int $businessCode
+     * @param array $data
      * @return Response
      */
-    public function badSuccessRequest($message = 'Bad Request!', $code = FoundationResponse::HTTP_BAD_REQUEST, $data = [])
+    public function badSuccessRequest(string $message = 'Bad Request!', int $businessCode = 0, array $data = []): Response
     {
         $status = [
             'status' => 'error',
-            'code' => $code,
+            'code' => $businessCode,
         ];
         $res = ['message' => $message];
         if ($data) {
@@ -199,11 +290,33 @@ trait ApiResponse
 
     /**
      * 资源不存在
-     * @param $message
+     * @param string $message
+     * @param ?int $businessCode
      * @return Response
      */
-    public function notFond($message = 'Not Fond!')
+    public function notFound(string $message = 'Not Found!', ?int $businessCode = null): Response
     {
-        return $this->failed($message, FoundationResponse::HTTP_NOT_FOUND);
+        return $this->failed($message, $businessCode, FoundationResponse::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * 清理日志消息，防止敏感信息泄露
+     * @param string $message
+     * @return string
+     */
+    private function sanitizeLogMessage(string $message): string
+    {
+        // 这里可以根据需要添加更多的清理逻辑
+        return preg_replace('/[^\x20-\x7E]/', '', $message); // 移除非ASCII字符
+    }
+
+    /**
+     * 验证HTTP状态码是否有效
+     * @param int $httpStatusCode
+     * @return bool
+     */
+    private function isValidHttpStatusCode(int $httpStatusCode): bool
+    {
+        return $httpStatusCode >= 100 && $httpStatusCode < 600;
     }
 }
