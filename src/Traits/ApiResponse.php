@@ -21,11 +21,6 @@ trait ApiResponse
      */
     protected ?int $businessCode = null;
 
-    /**
-     * 是否将键从蛇形命名转换为驼峰命名
-     * @var bool
-     */
-    protected bool $convertToCamelCase = true;
 
     /**
      * 默认响应头
@@ -77,16 +72,6 @@ trait ApiResponse
         return $this;
     }
 
-    /**
-     * 设置是否将键从蛇形命名转换为驼峰命名
-     * @param bool $convert
-     * @return $this
-     */
-    public function setConvertToCamelCase(bool $convert): self
-    {
-        $this->convertToCamelCase = $convert;
-        return $this;
-    }
 
     /**
      * @param mixed $data
@@ -95,7 +80,7 @@ trait ApiResponse
      */
     public function respond(mixed $data, array $header = []): Response
     {
-        if ($this->convertToCamelCase) {
+        if (config('plugin.landao.webman-core.app.camel_case_response', false)) {
             $data = CamelHelper::recursiveConvertNameCaseToCamel($data);
         }
         $headers = array_merge($this->defaultHeaders, $header);

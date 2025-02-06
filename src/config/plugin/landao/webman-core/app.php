@@ -92,5 +92,6 @@ return [
         'is_prod_env' => function () {
             return false;
         },
+        'camel_case_response' => true
     ],
 ];
