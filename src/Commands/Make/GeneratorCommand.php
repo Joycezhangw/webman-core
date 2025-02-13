@@ -24,6 +24,9 @@ abstract class GeneratorCommand extends Command
 
     protected $argumentName = '';
 
+    private ?InputInterface $input = null;
+    protected ?OutputInterface $output = null;
+
     abstract protected function getTemplateContents();
 
     abstract protected function getDestinationFilePath();
@@ -78,8 +81,6 @@ abstract class GeneratorCommand extends Command
     {
         return $this->argument();
     }
-
-    private ?InputInterface $input = null;
 
     protected function getInput(): InputInterface
     {
