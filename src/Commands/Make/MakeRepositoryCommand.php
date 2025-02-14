@@ -25,7 +25,7 @@ class MakeRepositoryCommand extends GeneratorCommand
     {
         $this->setName(static::$defaultName)->setDescription(static::$defaultDescription);
         $this->addArgument('name', InputArgument::REQUIRED, 'The name of the repository class..')
-            ->addArgument('plugin', InputArgument::OPTIONAL, 'The name of plugin will be used.')
+            ->addOption('plugin', null,InputOption::VALUE_REQUIRED, 'The name of plugin will be used.')
             ->addOption('multi-app', null, InputOption::VALUE_REQUIRED, 'Create repository classes in multiple applications')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Create the class even if the enum already exists');
     }
@@ -36,7 +36,7 @@ class MakeRepositoryCommand extends GeneratorCommand
         $pluginName = $this->getPluginName();
         $path = $this->getpluginPath($pluginName);
         $multiApp = $this->option('multi-app');
-        $filePath = GenerateConfigReader::read('repository', $multiApp)->getPath() ?? 'app/repository';
+        $filePath = GenerateConfigReader::read('repository', $multiApp)->getPath() ?? 'app/repositories';
         return $path . $filePath . '/' . $this->getRepositoryName() . 'Repo.php';
     }
 
@@ -49,8 +49,13 @@ class MakeRepositoryCommand extends GeneratorCommand
 
         $arguments = [
             'name' => $this->argument('name'),
-            'plugin' => $this->argument('plugin'),
+//            'plugin' => $this->argument('plugin'),
         ];
+
+        // 只有当 multi-app 有值时才添加到参数中
+        if ($this->option('plugin')) {
+            $arguments['--plugin'] = $this->option('plugin');
+        }
 
         // 只有当 multi-app 有值时才添加到参数中
         if ($this->option('multi-app')) {
@@ -62,7 +67,7 @@ class MakeRepositoryCommand extends GeneratorCommand
         return (new Stub($this->getStubName(), [
             'CLASS_NAMESPACE' => $namespace,
             'CLASS' => $className,
-            'MODEL_CLASS_NAMESPACE' => Str::replace('repositories', 'models', $namespace) . '\\' . $className . 'Model',
+            'MODEL_CLASS_NAMESPACE' => Str::replace('repositories', 'model', $namespace) . '\\' . $className . 'Model',
         ]))->render();
 
     }

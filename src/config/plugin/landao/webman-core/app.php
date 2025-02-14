@@ -16,10 +16,10 @@ return [
         'basePath' => app_path(),
         'rootNamespace' => 'app\\',
         'paths' => [
-            'model' => ['path' => 'app/models', 'generate' => false],
+            'model' => ['path' => 'app/model', 'generate' => false],
             'repository' => ['path' => 'app/repositories', 'generate' => false],
-            'enum' => ['path' => 'app/enums', 'generate' => false],
-            'request' => ['path' => 'app/requests', 'generate' => false],
+            'enum' => ['path' => 'app/enum', 'generate' => false],
+            'request' => ['path' => 'app/request', 'generate' => false],
             //database
             'migration' => ['path' => 'database/migrations', 'generate' => true],
             'seeder' => ['path' => 'database/seeders', 'generate' => true],

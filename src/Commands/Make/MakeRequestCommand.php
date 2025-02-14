@@ -23,7 +23,7 @@ class MakeRequestCommand extends GeneratorCommand
     {
         $this->setName(static::$defaultName)->setDescription(static::$defaultDescription);
         $this->addArgument('name', InputArgument::REQUIRED, 'The name of the request class.')
-            ->addArgument('plugin', InputArgument::OPTIONAL, 'The name of plugin will be used.')
+            ->addOption('plugin', null, InputOption::VALUE_REQUIRED, 'The name of plugin will be used.')
             ->addOption('multi-app', null, InputOption::VALUE_REQUIRED, 'Create request classes in multiple applications')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Create the class even if the enum already exists');
     }
@@ -34,7 +34,7 @@ class MakeRequestCommand extends GeneratorCommand
         $pluginName = $this->getPluginName();
         $path = $this->getpluginPath($pluginName);
         $multiApp = $this->option('multi-app');
-        $filePath = GenerateConfigReader::read('request', $multiApp)->getPath() ?? 'app/requests';
+        $filePath = GenerateConfigReader::read('request', $multiApp)->getPath() ?? 'app/request';
         return $path . $filePath . '/' . $this->getRepositoryName() . 'Request.php';
     }
 
@@ -61,7 +61,7 @@ class MakeRequestCommand extends GeneratorCommand
 
     public function getDefaultNamespace(): string
     {
-        return 'requests';
+        return 'request';
     }
 
     protected function getStubName(): string

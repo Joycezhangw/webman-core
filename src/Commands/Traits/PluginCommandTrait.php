@@ -7,7 +7,7 @@ trait PluginCommandTrait
 {
     public function getPluginName(): string
     {
-        return $this->argument('plugin') ?: 'app';
+        return $this->option('plugin') ?: 'app';
     }
 
     public function getPath(): string

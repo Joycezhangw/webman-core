@@ -23,7 +23,7 @@ class MakeEnumCommand extends GeneratorCommand
     {
         $this->setName(static::$defaultName)->setDescription(static::$defaultDescription);
         $this->addArgument('name', InputArgument::REQUIRED, 'The name of the enum class.')
-            ->addArgument('plugin', InputArgument::OPTIONAL, 'The name of plugin will be used.')
+            ->addOption('plugin', null, InputOption::VALUE_REQUIRED, 'The name of plugin will be used.')
             ->addOption('multi-app', null, InputOption::VALUE_REQUIRED, 'Create enumeration classes in multiple applications')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Create the class even if the enum already exists');
     }
@@ -61,7 +61,7 @@ class MakeEnumCommand extends GeneratorCommand
 
     public function getDefaultNamespace(): string
     {
-        return 'enums';
+        return 'enum';
     }
 
     protected function getStubName(): string

@@ -23,7 +23,7 @@ class MakeModelCommand extends GeneratorCommand
     {
         $this->setName(static::$defaultName)->setDescription(static::$defaultDescription);
         $this->addArgument('name', InputArgument::REQUIRED, 'The name of the model class..')
-            ->addArgument('plugin', InputArgument::OPTIONAL, 'The name of plugin will be used.')
+            ->addOption('plugin', null, InputOption::VALUE_REQUIRED, 'The name of plugin will be used.')
             ->addOption('multi-app', null, InputOption::VALUE_REQUIRED, 'Create model classes in multiple applications')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Create the class even if the enum already exists');
     }
@@ -34,7 +34,7 @@ class MakeModelCommand extends GeneratorCommand
         $pluginName = $this->getPluginName();
         $path = $this->getpluginPath($pluginName);
         $multiApp = $this->option('multi-app');
-        $filePath = GenerateConfigReader::read('model', $multiApp)->getPath() ?? 'app/models';
+        $filePath = GenerateConfigReader::read('model', $multiApp)->getPath() ?? 'app/model';
         return $path . $filePath . '/' . $this->getRepositoryName() . 'Model.php';
     }
 
@@ -61,7 +61,7 @@ class MakeModelCommand extends GeneratorCommand
 
     public function getDefaultNamespace(): string
     {
-        return 'models';
+        return 'model';
     }
 
     protected function getStubName(): string
