@@ -46,7 +46,7 @@ class MigrateCommand extends Command
             if ($input->getOption('seed')) {
                 $this->runSeeder($output);
             }
-
+            $output->writeln('<info>数据迁移成功!</info>');
             return Command::SUCCESS;
         }catch (\Throwable $e){
             $output->writeln('<error>数据迁移失败!</error>');
