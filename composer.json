@@ -33,8 +33,7 @@
     "symfony/finder": "^7.2",
     "guzzlehttp/guzzle": "^7.9",
     "illuminate/http": "^11.36||^11.42",
-    "tinywan/jwt": "^1.2",
-    "webman/console":"^2.1"
+    "tinywan/jwt": "^1.2"
   },
   "require-dev": {},
   "autoload": {

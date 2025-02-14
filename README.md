@@ -4,6 +4,9 @@
 
 
 ## 1、环境和安装
+
+* 在使用扩展前，先安装 `composer require webman/console`
+
 ### 1.1. 环境要求
 - 由于使用了[PHP8.1和枚举特性](https://www.php.net/releases/8.1/en.php)，因此PHP版本最低要求 >= 8.1，框架版本使用的是 webman1.6.x ([webman1.6.x 中文文档](https://www.workerman.net/doc/webman/README.html))
 
