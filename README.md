@@ -263,7 +263,7 @@ php webman landao:make-enum UserStatus
 php webman landao:make-enum System\\UserStatus
 
 # webman 插件plugin 生成枚举, foo 生成在 plugin/foo/app/enums 目录下,
-php webman landao:make-enum UserStatus foo
+php webman landao:make-enum UserStatus --plugin=foo
 
 # 多应用生成枚举,--multi-app=api 生成在 app/api/enums 目录下, 
 php webman landao:make-enum UserStatus --multi-app=api
@@ -279,7 +279,7 @@ php webman landao:make-repo User
 php webman landao:make-repo Seytem\\User
 
 # webman 插件plugin 生成, foo 生成在 plugin/foo/app/repositories/System，app/models/System 目录下,
-php webman landao:make-repo User foo
+php webman landao:make-repo User --plugin=foo
 
 # 多应用生成,,--multi-app=api 生成在 app/api/repositories,app/api/models 目录下, 
 php webman landao:make-repo User --multi-app=api
@@ -294,7 +294,7 @@ php webman landao:make-model User
 php webman landao:make-model Seytem\\User
 
 # webman 插件plugin 生成, foo 生成在 papp/models/System 目录下,
-php webman landao:make-model User foo
+php webman landao:make-model User --plugin=foo
 
 # 多应用生成,,--multi-app=api 生成在 app/api/models 目录下, 
 php webman landao:make-model User --multi-app=api
@@ -310,7 +310,7 @@ php webman landao:make-request User
 php webman landao:make-request Seytem\\User
 
 # webman 插件plugin 生成, foo 生成在 papp/requests/System 目录下,
-php webman landao:make-request User foo
+php webman landao:make-request User --plugin=foo
 
 # 多应用生成,,--multi-app=api 生成在 app/api/requests 目录下, 
 php webman landao:make-request User --multi-app=api
