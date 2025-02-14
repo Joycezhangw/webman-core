@@ -1,7 +1,6 @@
 {
   "name": "landao/webman-core",
   "type": "library",
-  "version": "1.0.9",
   "license": "MIT",
   "description": "Webman plugin landao/webman-core",
   "keywords": [
@@ -24,16 +23,18 @@
     "php": "^8.2",
     "ext-bcmath": "*",
     "ext-openssl": "*",
-    "illuminate/database": ">=11.36",
-    "illuminate/pagination": ">=11.36",
-    "illuminate/events": ">=1.36",
-    "illuminate/validation": ">=11.36",
-    "symfony/var-dumper": ">=7.2",
-    "laravel/serializable-closure": ">=2.0",
-    "symfony/finder": ">=7.2",
-    "guzzlehttp/guzzle": ">=7.9",
-    "illuminate/http": ">=11.36",
-    "tinywan/jwt": ">=1.10"
+    "ext-json": "*",
+    "illuminate/database": "^11.36||^11.42",
+    "illuminate/pagination": "^11.36||^11.42",
+    "illuminate/events": "^11.36||^11.42",
+    "illuminate/validation": "^11.36||^11.42",
+    "symfony/var-dumper": "^7.2",
+    "laravel/serializable-closure": "^2.0",
+    "symfony/finder": "^7.2",
+    "guzzlehttp/guzzle": "^7.9",
+    "illuminate/http": "^11.36||^11.42",
+    "tinywan/jwt": "^1.2",
+    "webman/console":"^2.1"
   },
   "require-dev": {},
   "autoload": {
@@ -43,7 +44,5 @@
     "files": [
       "src/helpers.php"
     ]
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+  }
 }
