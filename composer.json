@@ -24,6 +24,8 @@
     "ext-bcmath": "*",
     "ext-openssl": "*",
     "ext-json": "*",
+    "webman/console": "^2.1",
+    "webman/database": "^2.1",
     "illuminate/database": "^11.36||^11.42",
     "illuminate/pagination": "^11.36||^11.42",
     "illuminate/events": "^11.36||^11.42",
