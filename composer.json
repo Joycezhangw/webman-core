@@ -26,6 +26,8 @@
     "ext-json": "*",
     "webman/console": "^2.1",
     "webman/database": "^2.1",
+    "webman/redis": "^2.1",
+    "webman/cache": "^2.1",
     "illuminate/pagination": "^10.0 || ^11.0 || ^12.0",
     "illuminate/events": "^10.0 || ^11.0 || ^12.0",
     "illuminate/validation": "^10.0 || ^11.0 || ^12.0",
