@@ -31,6 +31,7 @@ return [
         'file' => true,
     ],
     'tenant' => [
+        'enable' => true,
         'primary_key' => 'tenant_id',
         'model' => \app\model\TenantModel::class
     ],
@@ -49,7 +50,7 @@ return [
             'enable' => true,
             // 验证失败处理方法
             'fail_handle' => function (Webman\Http\Request $request, string $message) {
-                return response(json_encode(['status' => 'error', 'code' => 0, 'message' => $message]), 400, ['Content-Type' => 'application/json;charset=utf-8']);
+                return response(json_encode(['status' => 'error', 'code' => 400, 'msg' => $message]), 400, ['Content-Type' => 'application/json;charset=utf-8']);
             }
         ],
     ],
@@ -77,7 +78,7 @@ return [
         ],
         // 自定义响应消息
         'body' => [
-            'code' => 0,
+            'code' => 500,
             'msg' => '服务器内部异常',
             'data' => null
         ],
@@ -92,6 +93,7 @@ return [
         'is_prod_env' => function () {
             return false;
         },
-        'camel_case_response' => true
     ],
+    // response 驼峰转下划线
+    'camel_case_response' => true
 ];

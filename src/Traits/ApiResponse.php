@@ -105,7 +105,6 @@ trait ApiResponse
                 $this->setHttpStatusCode(FoundationResponse::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
-
         // 设置业务状态码
         if (!is_null($businessCode)) {
             $this->setBusinessCode($businessCode);
@@ -113,13 +112,13 @@ trait ApiResponse
 
         // 构建状态信息
         $statusInfo = [
-            'status' => $status,
+//            'status' => $status,
             'code' => $this->getBusinessCode() ?? $this->getHttpStatusCode()
         ];
 
         // 处理 message 键为空字符串的情况
-        if (isset($data['message']) && is_string($data['message']) && trim($data['message']) === '') {
-            unset($data['message']);
+        if (isset($data['msg']) && is_string($data['msg']) && trim($data['msg']) === '') {
+            unset($data['msg']);
         }
 
         // 合并数据并返回响应
@@ -134,9 +133,9 @@ trait ApiResponse
      * @param ?int $businessCode
      * @return Response
      */
-    public function message(string $message, string $status = 'error', ?int $businessCode = null): Response
+    public function message(string $message, string $status = 'error', ?int $businessCode = 400): Response
     {
-        return $this->status($status, ['message' => $message], null, $businessCode);
+        return $this->status($status, ['msg' => $message], null, $businessCode);
     }
 
     /**
@@ -145,7 +144,7 @@ trait ApiResponse
      * @param ?int $businessCode
      * @return Response
      */
-    public function internalError(string $message = 'Internal Server Error!', ?int $businessCode = null): Response
+    public function internalError(string $message = 'Internal Server Error!', ?int $businessCode = 500): Response
     {
         return $this->failed($message, FoundationResponse::HTTP_INTERNAL_SERVER_ERROR, $businessCode);
     }
@@ -156,7 +155,7 @@ trait ApiResponse
      * @param ?int $businessCode
      * @return Response
      */
-    public function created(string $message = 'created', ?int $businessCode = null): Response
+    public function created(string $message = 'created', ?int $businessCode = 0): Response
     {
         return $this->setHttpStatusCode(FoundationResponse::HTTP_CREATED)->message($message, 'success', $businessCode);
     }
@@ -167,7 +166,7 @@ trait ApiResponse
      * @param ?int $businessCode
      * @return Response
      */
-    public function methodNotAllow(string $message = 'Method Not Allowed!', ?int $businessCode = null): Response
+    public function methodNotAllow(string $message = 'Method Not Allowed!', ?int $businessCode = 405): Response
     {
         return $this->failed($message, FoundationResponse::HTTP_METHOD_NOT_ALLOWED, $businessCode);
     }
@@ -179,9 +178,9 @@ trait ApiResponse
      * @param ?int $httpStatusCode
      * @return Response
      */
-    public function failed(string $message, ?int $businessCode = 0, ?int $httpStatusCode = FoundationResponse::HTTP_BAD_REQUEST): Response
+    public function failed(string $message, ?int $businessCode = 400, ?int $httpStatusCode = FoundationResponse::HTTP_BAD_REQUEST): Response
     {
-        return $this->status('error', ['message' => $message], $httpStatusCode, $businessCode);
+        return $this->status('error', ['msg' => $message], $httpStatusCode, $businessCode);
     }
 
     /**
@@ -190,7 +189,7 @@ trait ApiResponse
      * @param ?int $businessCode
      * @return Response
      */
-    public function unAuthorized(string $message = 'Unauthorized.', ?int $businessCode = null): Response
+    public function unAuthorized(string $message = 'Unauthorized.', ?int $businessCode = 401): Response
     {
         return $this->failed($message, $businessCode, FoundationResponse::HTTP_UNAUTHORIZED);
     }
@@ -201,7 +200,7 @@ trait ApiResponse
      * @param ?int $businessCode
      * @return Response
      */
-    public function serviceUnavailable(string $message = 'Service Unavailable!', ?int $businessCode = null): Response
+    public function serviceUnavailable(string $message = 'Service Unavailable!', ?int $businessCode = 503): Response
     {
         return $this->failed($message, $businessCode, FoundationResponse::HTTP_SERVICE_UNAVAILABLE);
     }
@@ -212,7 +211,7 @@ trait ApiResponse
      * @param ?int $businessCode
      * @return Response
      */
-    public function forbidden(string $message = 'Forbidden.', ?int $businessCode = null): Response
+    public function forbidden(string $message = 'Forbidden.', ?int $businessCode = 403): Response
     {
         return $this->failed($message, $businessCode, FoundationResponse::HTTP_FORBIDDEN);
     }
@@ -223,7 +222,7 @@ trait ApiResponse
      * @param ?int $businessCode
      * @return Response
      */
-    public function badRequest(string $message = 'Bad Request!', ?int $businessCode = null): Response
+    public function badRequest(string $message = 'Bad Request!', ?int $businessCode = 400): Response
     {
         return $this->failed($message, $businessCode, FoundationResponse::HTTP_BAD_REQUEST);
     }
@@ -231,14 +230,14 @@ trait ApiResponse
     /**
      * 成功响应
      * @param array $data
-     * @param string $message
+     * @param string $msg
      * @param string $status
      * @param ?int $businessCode
      * @return Response
      */
-    public function success(array $data = [], string $message = '', string $status = 'success', ?int $businessCode = null): Response
+    public function success(array $data = [], string $msg = '', string $status = 'success', ?int $businessCode = 0): Response
     {
-        return $this->status($status, compact('data', 'message'), null, $businessCode);
+        return $this->status($status, compact('data', 'msg'), null, $businessCode);
     }
 
     /**
@@ -247,7 +246,7 @@ trait ApiResponse
      * @param ?int $businessCode
      * @return Response
      */
-    public function successRequest(string $message = '', ?int $businessCode = null): Response
+    public function successRequest(string $message = '', ?int $businessCode = 0): Response
     {
         return $this->success([], $message, 'success', $businessCode);
     }
@@ -259,13 +258,13 @@ trait ApiResponse
      * @param array $data
      * @return Response
      */
-    public function badSuccessRequest(string $message = 'Bad Request!', int $businessCode = 0, array $data = []): Response
+    public function badSuccessRequest(string $message = 'Bad Request!', int $businessCode = 400, array $data = []): Response
     {
         $status = [
-            'status' => 'error',
+//            'status' => 'error',
             'code' => $businessCode,
         ];
-        $res = ['message' => $message];
+        $res = ['msg' => $message];
         if ($data) {
             $res['data'] = $data;
         }
@@ -279,7 +278,7 @@ trait ApiResponse
      * @param ?int $businessCode
      * @return Response
      */
-    public function notFound(string $message = 'Not Found!', ?int $businessCode = null): Response
+    public function notFound(string $message = 'Not Found!', ?int $businessCode = 404): Response
     {
         return $this->failed($message, $businessCode, FoundationResponse::HTTP_NOT_FOUND);
     }
