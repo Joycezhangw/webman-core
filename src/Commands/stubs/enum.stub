@@ -12,10 +12,10 @@ use Landao\WebmanCore\Enum\EnumExtend;
  *
  * @author joyecZhang <https://qilindao.github.io/docs/backend/laravel-lib/enum.html>
  *
- * Class UserStatusEnum
+ * Class $CLASS$Enum
  * @package $CLASS_NAMESPACE$
  */
-enum UserStatusEnum
+enum $CLASS$Enum
 {
     use EnumExtend;
 }
