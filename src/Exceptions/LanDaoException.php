@@ -111,14 +111,16 @@ class LanDaoException extends ExceptionHandler
      */
     protected function addRequestInfoToResponse(Request $request): void
     {
-        $this->responseData = array_merge($this->responseData, [
-            'domain' => $request->host(),
-            'method' => $request->method(),
-            'request_url' => $request->method() . ' ' . $request->uri(),
-            'timestamp' => date('Y-m-d H:i:s'),
-            'client_ip' => $request->getRealIp(),
-            'request_param' => $request->all(),
-        ]);
+        if (config('app.debug', false)) {
+            $this->responseData = array_merge($this->responseData, [
+                'domain' => $request->host(),
+                'method' => $request->method(),
+                'request_url' => $request->method() . ' ' . $request->uri(),
+                'timestamp' => date('Y-m-d H:i:s'),
+                'client_ip' => $request->getRealIp(),
+                'request_param' => $request->all(),
+            ]);
+        }
     }
 
     /**
@@ -258,7 +260,7 @@ class LanDaoException extends ExceptionHandler
         $bodyValue = array_values($this->config['body']);
         $responseBody = [
                 $bodyKey[0] ?? 'code' => $this->setCode($bodyValue, $this->errorCode), // 自定义异常code码
-                $bodyKey[1] ?? 'message' => $this->errorMessage,
+                $bodyKey[1] ?? 'msg' => $this->errorMessage,
                 $bodyKey[2] ?? 'data' => $this->responseData,
         ];
         $header = array_merge(['Content-Type' => 'application/json;charset=utf-8'], $this->header);

@@ -7,7 +7,7 @@ use Exception;
 use Symfony\Component\HttpFoundation\Response as FoundationResponse;
 use Throwable;
 
-class BaseException extends Exception implements Throwable
+class BaseException extends Exception
 {
     /**
      * Http Response 状态码
@@ -45,30 +45,35 @@ class BaseException extends Exception implements Throwable
      */
     public string $error = '';
 
-    public function __construct(string $message = "", array $params = [], string $error = '', Throwable $previous = null)
+    public function __construct(string $message = "", array $params = [], string $error = '')
     {
-        parent::__construct($message, $this->statusCode, $previous);
+        try {
+            parent::__construct($message, $this->statusCode);
 
-        if (!empty($params)) {
-            $this->errorMessage = $message;
+            if (!empty($message)) {
+                $this->errorMessage = $message;
+            }
+            if (!empty($error)) {
+                $this->error = $error;
+            }
+            if (!empty($params)) {
+                if (array_key_exists('statusCode', $params)) {
+                    $this->statusCode = $params['statusCode'];
+                }
+                if (array_key_exists('header', $params)) {
+                    $this->header = $params['header'];
+                }
+                if (array_key_exists('errorCode', $params)) {
+                    $this->errorCode = $params['errorCode'];
+                }
+                if (array_key_exists('data', $params)) {
+                    $this->data = $params['data'];
+                }
+            }
+        }catch (Exception $e){
+            var_dump($e);
         }
-        if (!empty($error)) {
-            $this->error = $error;
-        }
-        if (!empty($params)) {
-            if (array_key_exists('statusCode', $params)) {
-                $this->statusCode = $params['statusCode'];
-            }
-            if (array_key_exists('header', $params)) {
-                $this->header = $params['header'];
-            }
-            if (array_key_exists('errorCode', $params)) {
-                $this->errorCode = $params['errorCode'];
-            }
-            if (array_key_exists('data', $params)) {
-                $this->data = $params['data'];
-            }
-        }
+
 
     }
 
