@@ -19,6 +19,12 @@ class ForbiddenHttpException extends BaseException
     public int $statusCode = 403;
 
     /**
+     * 业务错误码
+     * @var int
+     */
+    public int $errorCode = 403;
+
+    /**
      * @link 解决跨域问题
      * @var array
      */

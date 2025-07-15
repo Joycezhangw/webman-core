@@ -18,6 +18,7 @@ class TooManyRequestsHttpException extends BaseException
      */
     public int $statusCode = 429;
 
+
     /**
      * @var array
      */
@@ -34,7 +35,7 @@ class TooManyRequestsHttpException extends BaseException
     /**
      * @var int
      */
-    public int $errorCode = 0;
+    public int $errorCode = 429;
 
     /**
      * @var string

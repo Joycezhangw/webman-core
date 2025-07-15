@@ -11,6 +11,12 @@ class RouteNotFoundException extends BaseException
     public int $statusCode = 404;
 
     /**
+     * 业务错误码
+     * @var int
+     */
+    public int $errorCode = 404;
+
+    /**
      * 错误消息.
      */
     public string $errorMessage = '路由地址不存在';
