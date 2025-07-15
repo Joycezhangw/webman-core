@@ -318,3 +318,67 @@ php webman landao:make-request User --plugin=foo
 # 多应用生成,,--multi-app=api 生成在 app/api/requests 目录下, 
 php webman landao:make-request User --multi-app=api
 ```
+
+## 6、Exception 异常
+
+### 6.1. 异常接管
+配置 `config/exception.php`
+插件配置，例如：`/plugin/system/config/exception.php`
+```php
+
+return [
+    '' => \Landao\WebmanCore\Exceptions\LanDaoException::class,//support\exception\Handler::class,
+];
+```
+
+### 6.2. 输出错误信息
+
+配置 `config/app.php` 开启调试模式
+```json
+{
+    "code": 401,
+    "msg": "账号或密码错误",
+    "data": {
+        "domain": "127.0.0.1:8787",
+        "method": "POST",
+        "request_url": "POST /admin-api/system/auth/login?tenantName=****&username=peadmin&password=123456qwe@A2&code=brmam&captchaKey=$2y$10$bNg0RzZkvzhkBr8XZiSDJOJTjwFc8pdTd7LJ1a5E6ywF4t.KUCwgm",
+        "timestamp": "2025-07-14 16:41:21",
+        "client_ip": "172.0.0.1",
+        "request_param": {
+            "tenant_name": "****",
+            "username": "peadmin",
+            "password": "****",
+            "code": "brmam",
+            "captcha_key": "$2y$10$bNg0RzZkvzhkBr8XZiSDJOJTjwFc8pdTd7LJ1a5E6ywF4t.KUCwgm"
+        },
+        "error_message": "账号或密码错误",
+        "error_trace": [
+            "#0 /www/php/landao/webman/plugin/system/app/controller/admin/auth/AuthController.php(54): plugin\\system\\app\\repositories\\UserRepo->doLogin('\\xE6\\x99\\xBA\\xE6\\xB1\\x87\\xE9\\x80\\x9A\\xE8\\xBD\\xAF\\xE4\\xBB\\xB6', 'peadmin', '****', 'WEB')",
+            "#20 {main}"
+        ],
+        "file": "/www/php/landao/webman/plugin/system/app/repositories/UserRepo.php",
+        "line": 64
+    }
+}
+```
+不开启调试，返回
+```json
+{
+    "code": 401,
+    "msg": "账号或密码错误",
+    "data": []
+}
+```
+### 6.3. 自定义业务错误码
+```php
+throw new UnauthorizedHttpException('账号或密码错误',['errorCode'=>40001]);
+```
+返回数据
+```json
+{
+    "code": 40001,
+    "msg": "账号或密码错误",
+    "data": []
+}
+```
+
