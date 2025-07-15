@@ -51,7 +51,7 @@ class Tenancy
      * 获取当前租户信息
      * @return array|null
      */
-    public function getTenant(): ?Tenant
+    public function getTenant()
     {
         return $this->currentTenant;
     }

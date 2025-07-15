@@ -9,13 +9,7 @@ trait BelongsToTenant
 {
 
 
-    /**
-     * 获取租户ID字段名
-     */
-    public static function getTenantIdColumn(): string
-    {
-        return config('plugin.landao.webman-core.app.tenant.primary_key', 'tenant_id');
-    }
+    public static $tenantIdColumn = 'tenant_id';
 
     /**
      * 租户关联
@@ -38,10 +32,9 @@ trait BelongsToTenant
         static::addGlobalScope(new TenantScope());
 
         static::creating(function ($model) {
-            $tenantIdColumn = static::getTenantIdColumn();
-            if (!$model->getAttribute($tenantIdColumn) && !$model->relationLoaded('tenant')) {
+            if (!$model->getAttribute(self::$tenantIdColumn) && !$model->relationLoaded('tenant')) {
                 if (tenancy()->hasTenant()) {
-                    $model->setAttribute($tenantIdColumn, tenancy()->getTenantId());
+                    $model->setAttribute(self::$tenantIdColumn, tenancy()->getTenantId());
                     $model->setRelation('tenant', tenancy()->getTenant());
                 }
             }
