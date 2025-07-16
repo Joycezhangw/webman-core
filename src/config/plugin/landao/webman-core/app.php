@@ -9,6 +9,11 @@ return [
         'secret_key' => md5('landdao by webman'),
         'secret_iv' => str_repeat("\0", 16)
     ],
+    'crypt'=>[
+        'key' => 'base64:N0P6HlpRJdUzwrvD32sGFnsiRh9T5+usF/uXXd12s6E=',//php -r "echo 'base64:'.base64_encode(random_bytes(32)).PHP_EOL;"
+        'iv' => 'Cuj2cKWc+ubVDhDHjW8AbA==',//php -r "echo base64_encode(random_bytes(16)).PHP_EOL;"
+        'cipher' => 'aes-256-cbc',
+    ],
     'paginate' => [
         'page_size' => 20
     ],

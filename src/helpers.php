@@ -45,3 +45,29 @@ if (!function_exists('tenant')) {
         return tenancy()->getTenant();
     }
 }
+
+if (!function_exists('encrypt')) {
+    /**
+     * 加密
+     * @param $value
+     * @return string
+     * @throws \Landao\WebmanCore\Exceptions\DecryptErrorException
+     */
+    function encrypt($value)
+    {
+        return (new \Landao\WebmanCore\Security\Crypt())->encrypt($value);
+    }
+}
+
+if (!function_exists('decrypt')) {
+    /**
+     * 解密
+     * @param $value
+     * @return string
+     * @throws \Landao\WebmanCore\Exceptions\DecryptErrorException
+     */
+    function decrypt($value)
+    {
+        return (new \Landao\WebmanCore\Security\Crypt())->decrypt($value);
+    }
+}
