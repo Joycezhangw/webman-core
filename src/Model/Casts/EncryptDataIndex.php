@@ -4,7 +4,7 @@ namespace Landao\WebmanCore\Model\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsInboundAttributes;
 use Illuminate\Database\Eloquent\Model;
-use LanDao\WebmanCore\Security\AopEncryptDataIndex;
+use Landao\WebmanCore\Security\AopEncryptDataIndex;
 
 /**
  * 可模糊搜索的加密字段进行拆字加密，使其支持模糊搜索

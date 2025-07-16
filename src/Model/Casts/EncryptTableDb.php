@@ -4,8 +4,8 @@ namespace Landao\WebmanCore\Model\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use LanDao\WebmanCore\Exceptions\DecryptErrorException;
-use LanDao\WebmanCore\Security\AesSecurity;
+use Landao\WebmanCore\Exceptions\DecryptErrorException;
+use Landao\WebmanCore\Security\AesSecurity;
 
 /**
  * 对需要加密的字段进行加解密处理

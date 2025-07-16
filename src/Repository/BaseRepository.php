@@ -28,9 +28,9 @@ abstract class BaseRepository implements BaseInterface
      * @throws RepositoryException
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function __construct(Application $app)
+    public function __construct(?Application $app = null)
     {
-        $this->app = $app;
+        $this->app = $app ?? new Application();
         $this->makeModel();
         $this->boot();
     }
