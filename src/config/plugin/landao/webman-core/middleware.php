@@ -4,6 +4,7 @@ use Landao\WebmanCore\Middleware\ApiCaseConverter;
 
 return [
     '@' => [
+        ApiCaseConverter::class,
         ValidatorMiddleware::class,
     ]
 ];
