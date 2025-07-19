@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Landao\WebmanCore\Traits;
 
-use Landao\WebmanCore\Helpers\CamelHelper;
 use support\Response;
 use Symfony\Component\HttpFoundation\Response as FoundationResponse;
 
@@ -80,9 +79,6 @@ trait ApiResponse
      */
     public function respond(mixed $data, array $header = []): Response
     {
-        if (config('plugin.landao.webman-core.app.camel_case_response', false)) {
-            $data = CamelHelper::recursiveConvertNameCaseToCamel($data);
-        }
         $headers = array_merge($this->defaultHeaders, $header);
         return new Response($this->getHttpStatusCode(), $headers, json_encode($data));
     }

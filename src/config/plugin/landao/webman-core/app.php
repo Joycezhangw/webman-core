@@ -99,6 +99,4 @@ return [
             return false;
         },
     ],
-    // response 驼峰转下划线
-    'camel_case_response' => true
 ];
