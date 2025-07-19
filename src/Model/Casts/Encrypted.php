@@ -46,7 +46,6 @@ class Encrypted implements CastsAttributes
     public function get($model, string $key, $value, array $attributes)
     {
         try {
-            var_dump($value);
             if (!is_null($value) && $value !== '') {
                 return Crypt::decrypt($value);
             }
