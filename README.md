@@ -382,3 +382,89 @@ throw new UnauthorizedHttpException('账号或密码错误',['errorCode'=>40001]
 }
 ```
 
+## 7、注解脱敏
+```php
+<?php
+
+namespace plugin\system\app\controller;
+
+use Landao\WebmanCore\Annotation\Desensitize;
+use Landao\WebmanCore\Traits\ApiResponse;
+use support\Request;
+
+
+#[Desensitize(field: 'mobile', rule: 'mobile')]
+#[Desensitize(field: 'email', rule: ['pattern' => '/(.{3})[\w\-]+@/', 'replacement' => '$1***@'])]
+#[Desensitize(field: 'user_indo.mobile', rule: 'mobile')]
+#[Desensitize(field: 'user_indo.email', rule: ['pattern' => '/(.{3})[\w\-]+@/', 'replacement' => '$1***@'])]
+#[Desensitize(field: 'user_indo.chaer.mobile', rule: 'mobile')]
+#[Desensitize(field: 'user_indo.chaer.email', rule: ['pattern' => '/(.{3})[\w\-]+@/', 'replacement' => '$1***@'])]
+class IndexController
+{
+    use ApiResponse;
+
+//    #[Desensitize(field: 'id_card', rule: ['pattern' => '/(\d{6})\d{8}(\d{4})/', 'replacement' => '$1********$2'])]
+    public function index()
+    {
+//        return $this->success([
+//            'mobile' => '13800138000',
+//            'email' => 'test@example.com',
+//            'id_card' => '110101199001011234',
+//            'user_indo'=>[
+//                'mobile' => '13800138000',
+//                'email' => 'test@example.com',
+//                'id_card' => '110101199001011234',
+//                'chaer'=>[
+//                    'mobile' => '13800138000',
+//                    'email' => 'test@example.com',
+//                    'id_card' => '110101199001011234',
+//                ]
+//            ]
+//        ]);
+//        return $this->success([
+//            [
+//                'mobile' => '13800138000',
+//                'email' => 'test@example.com',
+//                'id_card' => '110101199001011234',
+//            ],
+//            [
+//                'mobile' => '13800138000',
+//                'email' => 'test@example.com',
+//                'id_card' => '110101199001011234',
+//            ],
+//            [
+//                'mobile' => '13800138000',
+//                'email' => 'test@example.com',
+//                'id_card' => '110101199001011234',
+//            ]
+//        ]);
+        return $this->success([
+            'page'=>1,
+            'list'=>[
+                [
+                    'mobile' => '13800138000',
+                    'email' => 'test@example.com',
+                    'id_card' => '110101199001011234',
+                    'user_info'=>[
+                        'mobile' => '13800138000',
+                        'email' => 'test@example.com',
+                    ]
+                ],
+                [
+                    'mobile' => '13800138000',
+                    'email' => 'test@example.com',
+                    'id_card' => '110101199001011234',
+                ],
+                [
+                    'mobile' => '13800138000',
+                    'email' => 'test@example.com',
+                    'id_card' => '110101199001011234',
+                ]
+            ]
+        ]);
+    }
+
+}
+
+```
+
