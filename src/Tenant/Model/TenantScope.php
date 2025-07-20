@@ -16,9 +16,7 @@ class TenantScope implements Scope
         if (!tenancy()->hasTenant()) {
             return;
         }
-
-        $tenantColumn = $model::$tenantIdColumn ?? 'tenant_id';
-        $builder->where($tenantColumn, '=', tenancy()->getTenantId());
+        $builder->where('tenant_id', '=', tenancy()->getTenantId());
     }
 
     /**
@@ -29,9 +27,8 @@ class TenantScope implements Scope
         $builder->macro('withoutTenancy', function (Builder $builder) {
             return $builder->withoutGlobalScope($this);
         });
-        $primaryKey = config('plugin.landao.webman-core.app.tenant.primary_key', 'tenant_id');
-        $builder->macro('forTenant', function (Builder $builder, $tenantId) use ($primaryKey) {
-            return $builder->withoutTenancy()->where($primaryKey, $tenantId);
+        $builder->macro('forTenant', function (Builder $builder, $tenantId) {
+            return $builder->withoutTenancy()->where('tenant_id', $tenantId);
         });
     }
 }

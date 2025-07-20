@@ -21,7 +21,7 @@ trait BelongsToTenant
         if (!$tenantModel) {
             throw new TenancyException('租户模型未定义，请检查配置。');
         }
-        return $this->belongsTo($tenantModel, static::getTenantIdColumn());
+        return $this->belongsTo($tenantModel, self::$tenantIdColumn);
     }
 
     /**

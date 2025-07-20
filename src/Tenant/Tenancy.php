@@ -3,13 +3,14 @@
 namespace Landao\WebmanCore\Tenant;
 
 
+use support\Context;
+
 /**
  * 租户管理类
  */
 class Tenancy
 {
     private static $instance = null;
-    private $currentTenant = null;
 
     private function __construct()
     {
@@ -38,11 +39,8 @@ class Tenancy
      */
     public function setTenant($tenant): self
     {
-        $this->currentTenant = $tenant;
-
-//        if ($tenant) {
-//            $this->switchDatabase($tenant);
-//        }
+        // 使用协程上下文存储租户信息
+        Context::set('tenant', $tenant);
 
         return $this;
     }
@@ -53,16 +51,9 @@ class Tenancy
      */
     public function getTenant()
     {
-        return $this->currentTenant;
+        return Context::get('tenant');
     }
-
-    /**
-     * 获取主键名称
-     */
-    private function getPrimaryKey(): string
-    {
-        return config('plugin.landao.webman-core.app.tenant.primary_key', 'tenant_id');
-    }
+    
 
     /**
      * 获取当前租户ID
@@ -70,11 +61,12 @@ class Tenancy
      */
     public function getTenantId(): ?int
     {
-        if (!$this->currentTenant) {
+        // 使用协程上下文获取租户信息
+        $tenant = Context::get('tenant');
+        if (!$tenant) {
             return null;
         }
-        $primaryKey = $this->getPrimaryKey();
-        return $this->currentTenant->$primaryKey;
+        return $tenant->getKey();
     }
 
     /**
@@ -83,7 +75,7 @@ class Tenancy
      */
     public function hasTenant(): bool
     {
-        return $this->currentTenant !== null;
+        return Context::get('tenant') !== null;
     }
 
     /**
@@ -92,7 +84,7 @@ class Tenancy
      */
     public function clearTenant(): self
     {
-        $this->currentTenant = null;
+        Context::set('tenant', null);
         return $this;
     }
 

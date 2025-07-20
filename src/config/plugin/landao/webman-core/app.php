@@ -37,7 +37,7 @@ return [
     ],
     'tenant' => [
         'enable' => true,
-        'primary_key' => 'tenant_id',
+        'primary_key' => 'id',
         'model' => \app\model\TenantModel::class
     ],
     "annotation" => [
