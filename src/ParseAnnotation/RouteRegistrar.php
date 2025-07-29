@@ -60,10 +60,10 @@ class RouteRegistrar
      */
     public function group(array $options, $routes): self
     {
-        // 调用路由构建器的group方法，传入前缀和路由定义闭包
-        WebManRouter::group($options['prefix'] ?? '', $routes);
         // 将路由别名设置为路由组选项中的as值
         $this->routeNameAlias = $options['as'] ?? '';
+        // 调用路由构建器的group方法，传入前缀和路由定义闭包
+        WebManRouter::group($options['prefix'] ?? '', $routes);
 
         return $this;
     }
