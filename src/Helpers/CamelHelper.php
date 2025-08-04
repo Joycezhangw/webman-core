@@ -25,16 +25,23 @@ class CamelHelper
         }
         $params = [];
         foreach ($arr as $key => $value) {
-            if (!is_int($key)) {
-                if (is_array($value)) {
-                    $params[Str::snake($key)] = self::recursiveConvertParameterNameCase($value);
-                } else {
-                    $params[Str::snake($key)] = $value;
-                }
-            } elseif (is_array($value)) {
-                $params[$key] = self::recursiveConvertParameterNameCase($value);
+            // 递归处理数组值
+            if (is_array($value)) {
+                $processedValue = self::recursiveConvertParameterNameCase($value);
             } else {
-                $params[Str::snake($key)] = $value;
+                $processedValue = $value;
+            }
+
+            // 根据键类型决定是否转换
+            if (is_string($key)) {
+                // 字符串键转换为蛇形命名
+                $params[Str::snake($key)] = $processedValue;
+            } elseif (is_int($key)) {
+                // 整数键保持原样
+                $params[$key] = $processedValue;
+            } else {
+                // 其他类型的键（如浮点数、布尔值等）转换为字符串
+                $params[strval($key)] = $processedValue;
             }
         }
         return $params;
@@ -52,16 +59,19 @@ class CamelHelper
         }
         $outArray = [];
         foreach ($arr as $key => $value) {
-            if (!is_int($key)) {
-                if (is_array($value)) {
-                    $outArray[Str::camel($key)] = self::recursiveConvertNameCaseToCamel($value);
-                } else {
-                    $outArray[Str::camel($key)] = $value;
-                }
-            } elseif (is_array($value)) {
-                $outArray[$key] = self::recursiveConvertNameCaseToCamel($value);
+            // 递归处理数组值
+            $processedValue = is_array($value) ? self::recursiveConvertNameCaseToCamel($value) : $value;
+
+            // 根据键类型决定是否转换
+            if (is_string($key)) {
+                // 字符串键转换为驼峰命名
+                $outArray[Str::camel($key)] = $processedValue;
+            } elseif (is_int($key)) {
+                // 整数键保持原样
+                $outArray[$key] = $processedValue;
             } else {
-                $outArray[Str::camel($key)] = $value;
+                // 其他类型的键转换为字符串后再应用驼峰命名
+                $outArray[Str::camel(strval($key))] = $processedValue;
             }
         }
         return $outArray;
