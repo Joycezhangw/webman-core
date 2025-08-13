@@ -47,7 +47,12 @@ return [
             // 扫描的目录
             'directories' => [
                 app_path('controller') => [
-                ]
+                ],
+//                base_path('plugin/system/app/controller/admin') => [
+//                    'prefix' => '/admin-api/system',// 路由前缀
+//                    'as'=>'system:',// 路由别名
+//                    'namespace' => 'plugin\system\app\controller\admin\\'// 控制器命名空间
+//                ]
             ],
         ],
         // 验证器注解
@@ -55,7 +60,7 @@ return [
             'enable' => true,
             // 验证失败处理方法
             'fail_handle' => function (Webman\Http\Request $request, string $message) {
-                return response(json_encode(['status' => 'error', 'code' => 400, 'msg' => $message]), 400, ['Content-Type' => 'application/json;charset=utf-8']);
+                return response(json_encode([ 'code' => 400, 'msg' => $message]), 200, ['Content-Type' => 'application/json;charset=utf-8']);
             }
         ],
     ],
@@ -73,13 +78,14 @@ return [
         ],
         // 自定义HTTP状态码
         'status' => [
+            'validate'=>400,//表单验证
             'jwt_token' => 401, // 认证失败
             'jwt_token_expired' => 401, // 访问令牌过期
             'jwt_refresh_token_expired' => 402, // 刷新令牌过期
             'server_error' => 500, // 服务器内部错误
-            'server_error_is_response' => false, // 是否响应服务器内部错误
+            'server_error_is_response' => false, // 是否响应服务器内部错误，开发环境中打开，生产环境关闭
             'type_error' => 400, // 参数类型错误码
-            'type_error_is_response' => false, // 参数类型与预期声明的参数类型不匹配
+            'type_error_is_response' => false, // 参数类型与预期声明的参数类型不匹配，会输入类型异常错误信息，开发环境中打开，生产环境关闭
         ],
         // 自定义响应消息
         'body' => [

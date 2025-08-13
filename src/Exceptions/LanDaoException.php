@@ -162,15 +162,20 @@ class LanDaoException extends ExceptionHandler
             $this->errorMessage = isset($status['type_error_is_response']) && $status['type_error_is_response'] ? $e->getMessage() : '网络连接似乎有点不稳定。请检查您的网络！';
             $this->error = $e->getMessage();
         } elseif ($e instanceof ValidationException) {
+            $this->errorCode=$status['validate'];
             $this->statusCode = $status['validate'];
         } elseif ($e instanceof JwtTokenException) {
+            $this->errorCode=$status['jwt_token'];
             $this->statusCode = $status['jwt_token'];
         } elseif ($e instanceof JwtTokenExpiredException) {
+            $this->errorCode=$status['jwt_token_expired'];
             $this->statusCode = $status['jwt_token_expired'];
         } elseif ($e instanceof JwtRefreshTokenExpiredException) {
+            $this->errorCode=$status['jwt_refresh_token_expired'];
             $this->statusCode = $status['jwt_refresh_token_expired'];
         } elseif ($e instanceof \InvalidArgumentException) {
             $this->statusCode = $status['invalid_argument'] ?? 415;
+            $this->errorCode=$status['invalid_argument'] ?? 415;
             $this->errorMessage = '预期参数配置异常：' . $e->getMessage();
         } elseif ($e instanceof QueryException) {
             $this->statusCode = 500;
@@ -179,6 +184,9 @@ class LanDaoException extends ExceptionHandler
         } elseif ($e instanceof ServerErrorHttpException || $e instanceof AnnotationException || $e instanceof DecryptErrorException || $e instanceof RepositoryException || $e instanceof EnumException) {
             $this->errorMessage = $e->errorMessage;
             $this->statusCode = 500;
+        }elseif ($e instanceof BusinessException){
+            $this->errorMessage = $e->errorMessage ?? '';
+            $this->statusCode = $e->errorCode ?? 0;
         } else {
             $this->statusCode = $status['server_error'] ?? 500;
             $this->errorMessage = isset($status['server_error_is_response']) && $status['server_error_is_response'] ? $e->getMessage() : 'Internal Server Error';
