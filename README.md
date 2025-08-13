@@ -12,6 +12,28 @@
 
 ## 2、注解使用
 
+* 框架使用注解，需要先在 `config/plugin.php` 中开启 `landao/webman-core` 插件
+`config/plugin/landao.webman-core.app`
+```php
+//annotation.route
+ "annotation" => [
+    //路由注解
+    'route' => [
+        'enable' => true,
+        // 扫描的目录
+        'directories' => [
+            app_path('controller') => [
+            ],
+            base_path('plugin/system/app/controller/admin') => [
+                'prefix' => '/admin-api/system',// 路由前缀
+                'as'=>'system:',// 路由别名
+                'namespace' => 'plugin\system\app\controller\admin\\'// 控制器命名空间
+            ]
+        ],
+    ],
+],
+```
+
 ### 2.1. 路由注解
 
 * 在控制器中使用以下注解，快速创建一条路由
@@ -321,7 +343,7 @@ php webman landao:make-request User --multi-app=api
 
 ## 6、Exception 异常
 
-### 6.1. 异常接管
+### 6.1 异常接管
 配置 `config/exception.php`
 插件配置，例如：`/plugin/system/config/exception.php`
 ```php
@@ -331,7 +353,7 @@ return [
 ];
 ```
 
-### 6.2. 输出错误信息
+### 6.2 输出错误信息
 
 配置 `config/app.php` 开启调试模式
 ```json
@@ -369,7 +391,7 @@ return [
     "data": []
 }
 ```
-### 6.3. 自定义业务错误码
+### 6.3 自定义业务错误码
 ```php
 throw new UnauthorizedHttpException('账号或密码错误',['errorCode'=>40001]);
 ```
@@ -381,8 +403,84 @@ throw new UnauthorizedHttpException('账号或密码错误',['errorCode'=>40001]
     "data": []
 }
 ```
+### 6.4 统一业务异常处理，api直接返回
 
-## 7、注解脱敏
+异常枚举定义
+
+替换消息中的占位符，支持 {} 或 {0}, {1} 等格式
+
+```php
+<?php
+
+namespace plugin\system\app\enum;
+
+use Landao\WebmanCore\Exceptions\ErrorCodeInterface;
+use Landao\WebmanCore\Annotation\Description;
+use Landao\WebmanCore\Enum\EnumExtend;
+
+/**
+ * 错误码枚举
+ * 错误码规则：模块编号-功能编号-错误码编号-错误码序号 1_002_001_000
+ */
+enum ErrorCodeConstants: int implements ErrorCodeInterface
+{
+    use EnumExtend;
+
+    // ========== 菜单模块 1-002-001-000 ==========
+    #[Description('已经存在该名字的菜单')]
+    case MENU_NAME_DUPLICATE = 1_002_001_000;
+    #[Description('父菜单({})不存在<{}>')]
+    case MENU_PARENT_NOT_EXISTS = 1_002_001_001;
+    
+    #[Description('不能设置{0}自己为父菜单{1}')]
+    case MENU_PARENT_ERROR = 1_002_001_002;
+    
+
+
+    public function getValue(): int
+    {
+        return $this->value;
+    }
+}
+
+```
+抛出异常使用例子
+
+```php
+ExceptionFactory::throwBusinessException(ErrorCodeConstants::MENU_NAME_DUPLICATE);
+// 支持 {} 格式（按顺序替换）
+ExceptionFactory::throwBusinessException(ErrorCodeConstants::MENU_PARENT_NOT_EXISTS, '新增');
+// 支持 {0}, {1} 等索引格式
+ExceptionFactory::throwBusinessException(ErrorCodeConstants::MENU_PARENT_ERROR, '新增'，'新增1');
+ ```
+## 7、枚举注解、枚举转换
+方法：
+- ``static getMap()`` : 获取所有枚举键值对
+- ``static getKeys()`` : 获取所有枚举键
+- ``static getValues()`` : 获取所有枚举值
+- ``static include(string $value): bool`` : 检查键是否存在
+- ``static includeAll(array $names): bool`` : 检查多个键是否存在
+- ``equal()`` : 判断持久层返回的值是否相同
+- ``getEnumLabel(): stirng`` : 获取枚举注解说明
+- ``static getEnumMapLabel(): array`` : 获取枚举值和注解说明数组
+- ``static hasValue(mixed $value): bool``: 判断值是否包含在枚举value中
+- ``static hasAllValues(array $values): bool``: 判断多个值是否都包含在枚举value中
+- ``equals(self $enum): bool`` : 比较两个枚举实例是否相同
+- ``valueEquals(mixed $value): bool`` : 比较枚举值是否与给定值相同
+使用示例：
+```php
+// 假设我们有一个StatusEnum枚举
+$status = StatusEnum::ENABLE;
+
+// 比较两个枚举实例
+$status->equals(StatusEnum::ENABLE); // true
+$status->equals(StatusEnum::DISABLE); // false
+
+// 比较枚举值
+$status->valueEquals(1); // 如果ENABLE的值是1，则返回true
+$status->valueEquals('active'); // 如果ENABLE的值是'active'，则返回true
+```
+## 8、注解脱敏
 ```php
 <?php
 
