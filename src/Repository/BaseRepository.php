@@ -852,7 +852,7 @@ abstract class BaseRepository implements BaseInterface
             Db::beginTransaction();
             return;
         }
-        Db::transaction(call_user_func($callable));
+        return Db::transaction($callable);
     }
 
     /**
