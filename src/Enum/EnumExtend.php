@@ -4,6 +4,7 @@ namespace Landao\WebmanCore\Enum;
 
 use Landao\WebmanCore\Exceptions\EnumException;
 use ReflectionEnumUnitCase;
+
 /**
  * 枚举注解
  * trait EnumExtend
@@ -71,6 +72,33 @@ trait EnumExtend
     }
 
     /**
+     * 判断值是否包含在枚举value中
+     * @param mixed $value
+     * @return bool
+     */
+    public static function hasValue(mixed $value): bool
+    {
+        return in_array($value, self::getValues());
+    }
+
+
+    /**
+     * 判断多个值是否都包含在枚举value中
+     * @param array $values
+     * @return bool
+     */
+    public static function hasAllValues(array $values): bool
+    {
+        $enumValues = self::getValues();
+        foreach ($values as $value) {
+            if (!in_array($value, $enumValues)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * 判断持久层返回的是否相同
      * @param string $value
      * @return bool
@@ -81,7 +109,27 @@ trait EnumExtend
     }
 
     /**
-     * 获取枚举说明
+     * 比较两个枚举实例是否相同
+     * @param self $enum
+     * @return bool
+     */
+    public function equals(self $enum): bool
+    {
+        return $this === $enum;
+    }
+
+    /**
+     * 比较枚举值是否与给定值相同
+     * @param mixed $value
+     * @return bool
+     */
+    public function valueEquals(mixed $value): bool
+    {
+        return $this->value === $value;
+    }
+
+    /**
+     * 获取枚举注解说明
      * @return string
      * @throws EnumException
      */
@@ -98,7 +146,7 @@ trait EnumExtend
     }
 
     /**
-     * 获取枚举值和说明数组
+     * 获取枚举值和注解说明数组
      * @return array
      * @throws EnumException
      */
