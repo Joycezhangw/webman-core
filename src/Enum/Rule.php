@@ -364,6 +364,43 @@ enum Rule: string
      * 匹配EPP格式的国际电话号码
      */
     case MOBILE_INTERNATIONAL = 'regex:~^\+\d{1,3}-*\.*\d{4,14}(?:x.+)?$~';
+
+    /**
+     * 匹配国内固定电话号码格式
+     * 支持格式: 010-12345678, 01012345678, (010)12345678, 010-1234-5678
+     */
+    case LANDLINE_PHONE = 'regex:~^(0\d{2,3}-?\d{7,8}(-\d{1,4})?|\(0\d{2,3}\)\d{7,8}(-\d{1,4})?)$~';
+
+    /**
+     * 匹配国内邮政编码
+     * 支持格式: 6位数字
+     */
+    case POSTAL_CODE = 'regex:~^\d{6}$~';
+
+    /**
+     * 匹配银行卡号
+     * 支持格式: 10-22位数字
+     */
+    case BANK_CARD = 'regex:~^\d{10,22}$~';
+
+    /**
+     * 匹配车牌号
+     * 支持格式: 省份简称+字母+5位数字/字母
+     */
+    case LICENSE_PLATE = 'regex:~^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{5}$~';
+
+    /**
+     * 匹配组织机构代码
+     * 支持格式: 8位数字/字母+1位校验码
+     */
+    case ORGANIZATION_CODE = 'regex:~^[A-Z0-9]{8}-[A-Z0-9]$~';
+
+    /**
+     * 匹配统一社会信用代码
+     * 支持格式: 18位数字/字母
+     */
+    case UNIFIED_SOCIAL_CREDIT_CODE = 'regex:~^[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}$~';
+
     /**
      * not_in:foo,bar,…
      * 验证字段不能包含在给定的值的列表中。 使用 Rule::notIn 方法可以更流畅的构建这个规则：
@@ -593,4 +630,9 @@ enum Rule: string
      * 验证字段必须是有效的 RFC 4122（版本 1、3、4 或 5）通用唯一标识符 (UUID)。
      */
     case UUID = 'uuid';
+
+     /**
+     * 验证字段必须是一维数组，且包含两个日期格式的值
+     */
+    case ARRAY_WITH_TWO_DATES = 'array_with_two_dates';
 }

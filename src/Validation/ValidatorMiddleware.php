@@ -59,7 +59,7 @@ class ValidatorMiddleware implements MiddlewareInterface
             //如果验证失败，则返回错误信息
             if (!empty($result))
                 return (config('plugin.landao.webman-core.app.annotation.validator.fail_handle') ?? function (Request $request, string $message) {
-                    return response(json_encode(['status' => 'error', 'code' => 400, 'msg' => $message]), 400, ['Content-Type' => 'application/json;charset=utf-8']);
+                    return response(json_encode(['code' => 400, 'msg' => $message]), 200, ['Content-Type' => 'application/json;charset=utf-8']);
                 })($request, (string)$result);
         }
         //验证通过，执行请求的处理器
